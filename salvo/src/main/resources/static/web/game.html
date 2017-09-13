@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" type="text/css" href="style/salvo_style.css">
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+    <h2 id="whoVersusWho"></h2>
+
+
+    <div class="tables">
+        <table id="hitsAndMyShips">
+        </table>
+        <table id="shotsIFired">
+        </table>
+    </div>
+    <div class="checkBotton">
+        <input type="checkbox" id="placeVertical"> Place vertical
+    </div>
+    <div class="tableShips">
+        <div>
+            <img data-number-cells="5" class="boat" src="img/aircraftcarrier.png">
+        </div>
+        <div>
+            <img data-number-cells="4" class="boat" src="img/battleShip.png">
+        </div>
+        <div>
+            <img data-number-cells="4" class="boat" src="img/submarine.png">
+        </div>
+        <div>
+            <img data-number-cells="3" class="boat" src="img/destroyer.png">
+        </div>
+        <div>
+            <img data-number-cells="2" class="boat" src="img/patrolBoat.png">
+        </div>
+    </div>
+
+    <button id="placeShips">Place ships</button>
+    <button id="sendSalvos">Send salvos</button>
+
+    <script src="game.js" type="text/javascript"></script>
+</body>
+
+</html>

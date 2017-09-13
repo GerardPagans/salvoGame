@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Salvo</title>
+</head>
+
+<body>
+    <h1>SALVO!!!</h1>
+
+    <ol class="listOfGames">
+
+    </ol>
+    <div class="ranking">
+    </div>
+
+    <form id="login-form" onsubmit="return false">
+        <label class="logIn">Email: <input type="text" name="username" id="email"></label>
+        <label class="logIn">Password: <input type="text" name="password" id="password"></label>
+        <button id="logIn">Log in</button>
+    </form>
+
+    <form id="logout-form" onsubmit="return false">
+        <button id= "logOut">Log out</button>
+    </form>
+
+    <form id="signIn-form" onsubmit="return false">
+        <label class="signIn">First Name: <input id="firstName" type="text" name="username" ></label>
+        <label class="signIn">Last Name: <input id="lastName" type="text" name="username" ></label>
+         <label class="signIn">Email: <input id="emailSignIn" type="text" name="username" ></label>
+        <label class="signIn">Password: <input id="passwordSignIn" type="text" name="password" ></label>
+        <button id= "signIn" class="signIn">Sign in</button>
+    </form>
+    
+    <button id="createNewGame">Create New Game</button>
+
+    <script src="games.js" type="text/javascript"></script>
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+body {
+    width: 80%;
+    margin: auto;
+    background-image: url(../img/salvoBackImage.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.salvo {
+    background-color: red;
+}
+
+.ship {
+    background-color: green;
+}
+
+.boat {
+    width: 150px;
+}
+
+.hitShotShip {
+    background-color: orange;
+}
+
+.prova {
+    display: flex;
+    flex-direction: column;
+}
+
+.tables {
+    display: flex;
+    align-content: center;
+    width: 80%;
+    border-collapse: collapse;
+}
+
+.tableShips {
+    margin-top: 10px;
+    display: flex;
+}
+
+.placeShips {
+    margin-top: 20px;
+}
+
+.checkBotton {
+    margin-top: 20px;
+}
+
+
+/* Zebra striping */
+
+tr:nth-of-type(odd) {
+    background: #eee;
+}
+
+th {
+    background: #333;
+    color: white;
+    font-weight: bold;
+}
+
+td,
+th {
+    padding: 6px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
