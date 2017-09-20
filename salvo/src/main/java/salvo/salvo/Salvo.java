@@ -60,7 +60,13 @@ public class Salvo {
         return location;
     }
 
+    public List<String> getLocationWithGamePlayerAndturn(GamePlayer gamePlayer, int turnNumber){
+        return location;
+    }
+
     public void setLocation(List<String> location) {
         this.location = location;
     }
+
+
 }

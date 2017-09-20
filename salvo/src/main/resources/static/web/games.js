@@ -2,40 +2,103 @@
 $(document).ready(function () {
 
     //get the JSON from the URL that finishes with /api/games
-    $.getJSON(" /api/games", function (json) {
-        createRankingTable(json.games);
-        console.log("funciona1: ", json);
-        if (json.player !== undefined) {
-            console.log(json.games);
-            createListGames(json.games);
-            createRankingTable(json.games);
-            console.log("funciona2");
-        }
+    $.getJSON(" /api/games", onDataReady);
 
-        //button join game 
-        $(".joinGame").click(joinGame);
-
-        //button to log out
-        $("#logOut").click(logOut);
-
-        //get the value of the labels for login and do the login
-        $("#logIn").click(logIn);
-
-        //get the value from sign up, sign up login
-        $("#signIn").click(signIn);
+    $('#login-form-link').click(function (e) {
+        $("#login-form").delay(100).fadeIn(100);
+        $("#register-form").fadeOut(100);
+        $('#register-form-link').removeClass('active');
+        $(this).addClass('active');
+        e.preventDefault();
     });
+    $('#register-form-link').click(function (e) {
+        $("#register-form").delay(100).fadeIn(100);
+        $("#login-form").fadeOut(100);
+        $('#login-form-link').removeClass('active');
+        $(this).addClass('active');
+        e.preventDefault();
+    });
+
 });
 
+
+
+function onDataReady(data) {
+
+    createRankingTable(data.games);
+
+    if (data.player !== undefined) {
+        $(".container").hide();
+        console.log("GamePlayer connected");
+        createListGamesForLoginPlayers(data);
+    }
+
+    if (data.player == undefined) {
+        console.log("No gamePlayer");
+        createListGames(data.games);
+        $("#logout-form").hide();
+        $("#createNewGame").hide();
+    }
+
+    //button join game 
+    $(".joinGame").click(joinGame);
+
+    //button to log out
+    $("#logOut").click(logOut);
+
+    //get the value of the labels for login and do the login
+    $("#login-submit").click(logIn);
+
+    //get the value from sign up, sign up login
+    $("#register-submit").click(signIn);
+
+    //create a new game
+    $("#createNewGame").click(createGame);
+}
+
+
+function createListGamesForLoginPlayers(data) {
+    for (var i = 0; i < data.games.length; i++) {
+        var date = new Date(data.games[i].createDate).toLocaleString();
+        var player1 = data.games[i].players[0].email;
+        var idGame = data.player.id;
+        var player2;
+
+        console.log(data.games[i].players[1]);
+        console.log(data.games[i].players[0].pgid);
+        console.log(idGame);
+
+
+        if (!data.games[i].players[1] && data.games[i].players[0].pgid !== idGame) {
+            player2 = "<button id='" + data.games[i].id + "' class='joinGame'>JoinGame</button>";
+        }
+        if (data.games[i].players[1] !== undefined) {
+            player2 = data.games[i].players[1].email;
+        }
+        if (data.games[i].players[0].pgid == idGame && data.games[i].players[1].pgid == undefined) {
+            player2 = "WAITING FOR A PLAYER";
+        }
+        if (data.games[i].players[0].pgid == idGame || data.games[i].players[1].pgid == idGame) {
+            player2 = data.games[i].players[1].email + "<button id='" + data.games[i].id + "' class='play'>Play</button>";
+        }
+        var info = "<li>" + date + ": " + player1 + " VS. " + player2;
+        $(".listOfGames").append(info);
+    }
+
+}
+
 function createListGames(games) {
+    console.log("games:", games);
+
     for (var i = 0; i < games.length; i++) {
-        console.log(" createListGames");
         var date = new Date(games[i].createDate).toLocaleString();
         var player1 = games[i].players[0].email;
+        var player2;
 
         if (!games[i].players[1]) {
-            var player2 = "<button id='" + games[i].id + "' class='joinGame'>JoinGame</button>";
+            player2 = "WAITING FOR A PLAYER";
         } else {
-            var player2 = games[i].players[1].email;
+            player2 = games[i].players[1].email;
         }
         var info = "<li>" + date + ": " + player1 + " VS. " + player2;
         $(".listOfGames").append(info);
@@ -58,9 +121,8 @@ function createRankingTable(games) {
     cellWon.innerHTML = "WON";
     cellLost.innerHTML = "LOST";
     cellTied.innerHTML = "TIED";
-    
+
     for (var k = 0; k < games.length; k++) {
-        console.log(k);
         for (var i = 0; i < games[k].scores.length; i++) {
             var player = games[k].scores[i].player;
             var score = games[k].scores[i].score;
@@ -122,32 +184,27 @@ function findPlayer(list, player) {
 
 function joinGame() {
     var idGame = this.id;
-    console.log(this.id);
-    console.log("/api/game/" + idGame + "/players");
-    $.post("/api/game/" + idGame + "/players").done(function () {
 
+    $.post("/api/game/" + idGame + "/players").done(function () {
         console.log("joined game");
+        console.log("id player:");
+        location.assign("/web/game.html?gp=" + idGame);
     });
 
 }
 
 function logOut() {
     $.post("/api/logout").done(function () {
+        location.reload();
         console.log("log out");
-        $("#logOut").hide();
-        $("#createNewGame").hide();
-        $("#logIn").show();
-        $(".logIn").show();
-        $(".signIn").show();
     });
-
 
 }
 
 function logIn() {
 
     //get the variables
-    var email = $("#email").val();
+    var email = $("#username").val();
 
     if (email.indexOf("@") == -1) {
         alert("InvalidName");
@@ -162,46 +219,43 @@ function logIn() {
     //send this user object
     $.post("/api/login", user).done(function () {
         console.log("logged in");
-        $("#logOut").show();
-        $("#createNewGame").show();
-        $("#logIn").hide();
-        $(".logIn").hide();
-        $(".signIn").hide();
-        location.reload();
+        onDataReady();
     });
 }
 
 function signIn() {
-    var firstName = $("#firstName").val();
-    var lastName = $("#lastName").val();
+    console.log("register sign in");
+    var usernameRegister = $("#usernameRegister").val();
+    var lastNameRegister = $("#lastNameRegister").val();
     var emailSignIn = $("#emailSignIn").val();
 
-    if (emailSignIn.indexOf("@") == -1) {
+    if (emailSignIn.indexOf("@") == -1 || usernameRegister == null) {
         alert("InvalidEmail");
     }
 
     var passwordSignIn = $("#passwordSignIn").val();
     var user = {
-        "firstName": firstName,
-        "lastName": lastName,
+        "username": usernameRegister,
+        "lastName": lastNameRegister,
         "email": emailSignIn,
         "password": passwordSignIn,
     };
 
+    console.log(user);
+
     $.post("/api/players", user)
         .done(function () {
             $.post("/api/login", user);
-            $("#logOut").show();
+            $("#logout-form").show();
             $("#createNewGame").show();
-            $("#logIn").hide();
-            $(".logIn").hide();
-            $(".signIn").hide();
+            $("#login-form").hide();
+            $("#signIn-form").hide();
         });
+}
 
-    //button create new game
-    $("#createNewGame").click(function () {
-        $.post("/api/games").done(function () {
-            console.log("created game");
-        });
+function createGame() {
+    $.post("/api/games").done(function (data) {
+        console.log("created game");
+        location.assign("/web/game.html?gp=" + data.gpid);
     });
 }

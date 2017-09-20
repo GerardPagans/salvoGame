@@ -37,7 +37,6 @@ public class GamePlayer {
     public GamePlayer(){}
 
 
-
     public GamePlayer (Game game, Player player) {
         this.game = game;
         this.player = player;
@@ -84,6 +83,17 @@ public class GamePlayer {
 
     public void setSalvos(Set<Salvo> salvos) {
         this.salvos = salvos;
+    }
+
+    public int getLastTurn(Set<Salvo> salvos){
+
+        int maxSalvo =0;
+        for(Salvo salvo: salvos){
+        if(maxSalvo < salvo.getTurnNumber()){
+            maxSalvo = salvo.getTurnNumber();
+        }
+    }
+    return maxSalvo;
     }
 
 
