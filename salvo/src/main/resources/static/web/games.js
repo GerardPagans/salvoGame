@@ -21,10 +21,8 @@ $(document).ready(function () {
 
 });
 
-
-
 function onDataReady(data) {
-
+    console.log(data);
     createRankingTable(data.games);
 
     if (data.player !== undefined) {
@@ -43,6 +41,9 @@ function onDataReady(data) {
     //button join game 
     $(".joinGame").click(joinGame);
 
+    //button to play a game that you are already a player
+    $(".play").click(playGame);
+
     //button to log out
     $("#logOut").click(logOut);
 
@@ -59,32 +60,34 @@ function onDataReady(data) {
 
 function createListGamesForLoginPlayers(data) {
     for (var i = 0; i < data.games.length; i++) {
+        console.log(i);
+
         var date = new Date(data.games[i].createDate).toLocaleString();
         var player1 = data.games[i].players[0].email;
-        var idGame = data.player.id;
+        var idGamePlayer = data.player.id;
         var player2;
 
-        console.log(data.games[i].players[1]);
-        console.log(data.games[i].players[0].pgid);
-        console.log(idGame);
-
-
-        if (!data.games[i].players[1] && data.games[i].players[0].pgid !== idGame) {
-            player2 = "<button id='" + data.games[i].id + "' class='joinGame'>JoinGame</button>";
+        if (data.games[i].players.length == 1) {
+            console.log("1 player i..");
+            if (data.games[i].players[0].pgid !== idGamePlayer) {
+                console.log("1 player i..podem jugar");
+                player2 = "<button id='" + idGamePlayer + "' class='joinGame'>JoinGame</button>";
+            } else {
+                console.log("1 player i..esperant a que algu s'afeeixi");
+                player2 = "WAITING FOR A PLAYER";
+            }
+        } else {
+            if (data.games[i].players[0].pgid == idGamePlayer || data.games[i].players[1].pgid == idGamePlayer) {
+                console.log("2 player i..un som nosaltres");
+                player2 = data.games[i].players[1].email + "<button id='" + idGamePlayer + "' class='play'>Play</button>";
+            } else {
+                console.log("2 players i..cap som nosaltres");
+                player2 = data.games[i].players[1].email;
+            }
         }
-        if (data.games[i].players[1] !== undefined) {
-            player2 = data.games[i].players[1].email;
-        }
-        if (data.games[i].players[0].pgid == idGame && data.games[i].players[1].pgid == undefined) {
-            player2 = "WAITING FOR A PLAYER";
-        }
-        if (data.games[i].players[0].pgid == idGame || data.games[i].players[1].pgid == idGame) {
-            player2 = data.games[i].players[1].email + "<button id='" + data.games[i].id + "' class='play'>Play</button>";
-        }
-        var info = "<li>" + date + ": " + player1 + " VS. " + player2;
-        $(".listOfGames").append(info);
     }
-
+    var info = "<li>" + date + ": " + player1 + " VS. " + player2;
+    $(".listOfGames").append(info);
 }
 
 function createListGames(games) {
@@ -193,10 +196,16 @@ function joinGame() {
 
 }
 
+function playGame() {
+    console.log("works");
+    var idGame = this.id;
+    location.assign("/web/game.html?gp=" + idGame);
+}
+
 function logOut() {
     $.post("/api/logout").done(function () {
-        location.reload();
         console.log("log out");
+        location.reload();
     });
 
 }

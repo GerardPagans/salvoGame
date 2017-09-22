@@ -38,8 +38,15 @@ public class SalvoController {
         Map<String, Object> map = new LinkedHashMap<>();
         GamePlayer currentGamePlayer = gamePlayerRepository.findOne(gamePlayerId);
 
+
+
         if (isGuest(authentication)) {
             return new ResponseEntity<Object>("you are not login", HttpStatus.FORBIDDEN);
+        }
+
+        if(authentication.getName() != currentGamePlayer.getPlayer().getEmail()){
+            return new ResponseEntity<Object>("you are not login", HttpStatus.FORBIDDEN);
+
         }
 
         // gp id is not in the repo
@@ -50,6 +57,9 @@ public class SalvoController {
 
         else{
 
+
+        List<String> enemySalvoes = listOfSalvoes(getEnemyPlayer(currentGamePlayer));
+
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("id", currentGamePlayer.getGame().getId());
         dto.put("game", currentGamePlayer.getGame().getDate());
@@ -58,6 +68,8 @@ public class SalvoController {
         dto.put("enemy", getEnemyPlayer(currentGamePlayer).getPlayer().getEmail());
         dto.put("mySalvoes", currentGamePlayer.getSalvos().stream().map(salvo -> getSalvoInfoDTO(salvo)).collect(Collectors.toList()));
         dto.put("enemiesSalvoes", (getEnemyPlayer(currentGamePlayer)).getSalvos().stream().map(salvoEnemy -> getSalvoInfoDTO(salvoEnemy)).collect(Collectors.toList()));
+        dto.put("list Of Salvoes",enemySalvoes);
+        dto.put("sunkShips", currentGamePlayer.getShips().stream().map(ship -> shipIsSunk(enemySalvoes, ship)).collect(Collectors.toList()));
             return new ResponseEntity<Object>(dto, HttpStatus.OK);
     }
 }
@@ -326,7 +338,7 @@ public class SalvoController {
     }
 
 
-    private GamePlayer getEnemyPlayer(GamePlayer gamePlayer) {
+    private GamePlayer  getEnemyPlayer(GamePlayer gamePlayer) {
 
         Long playerId = gamePlayer.getId();
         Set<GamePlayer> gamePlayers = gamePlayer.getGame().getGamePlayers();
@@ -359,12 +371,16 @@ public class SalvoController {
     }
 
 
-    private boolean shipIsSunk(List<String> playerSalvoes, Ship ship) {
+    private Map<String, Object> shipIsSunk(List<String> enemySalvoes, Ship ship) {
 
+        Map<String, Object> shipInfoSunkTypeDTO = new LinkedHashMap<>();
         boolean shipIsSunk = ship.getLocation().stream()
-                .allMatch(locations -> playerSalvoes.contains(locations));
+                .allMatch(locations -> enemySalvoes.contains(locations));
 
-        return shipIsSunk;
+        shipInfoSunkTypeDTO.put("typeShip", ship.getShipType());
+        shipInfoSunkTypeDTO.put("isSunk",shipIsSunk );
+
+        return shipInfoSunkTypeDTO;
     }
 
     public Map<String, Object> getSalvoInfoDTO(Salvo salvo){
@@ -376,6 +392,15 @@ public class SalvoController {
 
         return map;
     }
+
+
+    public List<String> listOfSalvoes(GamePlayer gamePlayer) {
+
+        return gamePlayer.getSalvos().stream()
+                .map(salvo -> salvo.getLocation())
+                .flatMap(cells -> cells.stream()).collect(Collectors.toList());
+    }
+
 }
 
 
