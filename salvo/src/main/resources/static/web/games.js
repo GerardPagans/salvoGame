@@ -71,7 +71,7 @@ function createListGamesForLoginPlayers(data) {
             console.log("1 player i..");
             if (data.games[i].players[0].pgid !== idGamePlayer) {
                 console.log("1 player i..podem jugar");
-                player2 = "<button id='" + idGamePlayer + "' class='joinGame'>JoinGame</button>";
+                player2 = "<button id='join" + idGamePlayer + "' class='joinGame'>JoinGame</button>";
             } else {
                 console.log("1 player i..esperant a que algu s'afeeixi");
                 player2 = "WAITING FOR A PLAYER";
@@ -85,9 +85,9 @@ function createListGamesForLoginPlayers(data) {
                 player2 = data.games[i].players[1].email;
             }
         }
-    }
     var info = "<li>" + date + ": " + player1 + " VS. " + player2;
     $(".listOfGames").append(info);
+    }
 }
 
 function createListGames(games) {
@@ -186,8 +186,11 @@ function findPlayer(list, player) {
 }
 
 function joinGame() {
-    var idGame = this.id;
-
+//    var idGame = this.id;
+//    idGame.substr(4);
+//    console.log(idGame);
+var idGame = 1;
+    console.log("/api/game/" + idGame + "/players");
     $.post("/api/game/" + idGame + "/players").done(function () {
         console.log("joined game");
         console.log("id player:");
