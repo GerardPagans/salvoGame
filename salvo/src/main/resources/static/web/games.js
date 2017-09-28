@@ -60,33 +60,36 @@ function onDataReady(data) {
 
 function createListGamesForLoginPlayers(data) {
     for (var i = 0; i < data.games.length; i++) {
-        console.log(i);
 
         var date = new Date(data.games[i].createDate).toLocaleString();
         var player1 = data.games[i].players[0].email;
-        var idGamePlayer = data.player.id;
+        var idPlayer = data.player.id;
         var player2;
 
         if (data.games[i].players.length == 1) {
-            console.log("1 player i..");
-            if (data.games[i].players[0].pgid !== idGamePlayer) {
-                console.log("1 player i..podem jugar");
-                player2 = "<button id='join" + idGamePlayer + "' class='joinGame'>JoinGame</button>";
+            if (data.games[i].players[0].id !== idPlayer) {
+                var idGamePlayer1 = data.games[i].players[1].pgid;
+                player2 = "<button id='gp" + idGamePlayer1 + "join" + parseInt(i + 1) + "' class='joinGame'>JoinGame</button>";
             } else {
-                console.log("1 player i..esperant a que algu s'afeeixi");
-                player2 = "WAITING FOR A PLAYER";
+                var idGamePlayer0 = data.games[i].players[0].pgid;
+                player2 = "WAITING FOR A PLAYER" + "<button id='" + i + "play" + idGamePlayer0 + "' class='play'>Play</button>";
             }
         } else {
-            if (data.games[i].players[0].pgid == idGamePlayer || data.games[i].players[1].pgid == idGamePlayer) {
-                console.log("2 player i..un som nosaltres");
-                player2 = data.games[i].players[1].email + "<button id='" + idGamePlayer + "' class='play'>Play</button>";
+            var idGamePlayer;
+            if (data.games[i].players[0].id == idPlayer || data.games[i].players[1].id == idPlayer) {
+                if (data.games[i].players[0].id == idPlayer) {
+                    idGamePlayer = data.games[i].players[0].pgid;
+                } else {
+                    idGamePlayer = data.games[i].players[1].pgid;
+                }
+
+                player2 = data.games[i].players[1].email + "<button id='" + i + "play" + idGamePlayer + "' class='play'>Play</button>";
             } else {
-                console.log("2 players i..cap som nosaltres");
                 player2 = data.games[i].players[1].email;
             }
         }
-    var info = "<li>" + date + ": " + player1 + " VS. " + player2;
-    $(".listOfGames").append(info);
+        var info = "<li>" + date + ": " + player1 + " VS. " + player2;
+        $(".listOfGames").append(info);
     }
 }
 
@@ -186,28 +189,32 @@ function findPlayer(list, player) {
 }
 
 function joinGame() {
-//    var idGame = this.id;
-//    idGame.substr(4);
-//    console.log(idGame);
-var idGame = 1;
+    var idGame = this.id;
+    var idThisGamePlayer = idGame.charAt(2);
+    console.log(idThisGamePlayer);
+    idGame = idGame.substr(7);
+    console.log(idGame);
     console.log("/api/game/" + idGame + "/players");
     $.post("/api/game/" + idGame + "/players").done(function () {
         console.log("joined game");
         console.log("id player:");
-        location.assign("/web/game.html?gp=" + idGame);
+
+        location.assign("/web/game.html?gp=" + idThisGamePlayer);
     });
 
 }
 
 function playGame() {
-    console.log("works");
-    var idGame = this.id;
-    location.assign("/web/game.html?gp=" + idGame);
+    var idGamePlayer = this.id;
+    idGamePlayer = idGamePlayer.substr(5);
+    console.log(idGamePlayer);
+
+    location.assign("/web/game.html?gp=" + idGamePlayer);
 }
 
 function logOut() {
     $.post("/api/logout").done(function () {
-        console.log("log out");
+        console.log("LOG OUT");
         location.reload();
     });
 
@@ -236,7 +243,7 @@ function logIn() {
 }
 
 function signIn() {
-    console.log("register sign in");
+    console.log("pressed botton register sign in");
     var usernameRegister = $("#usernameRegister").val();
     var lastNameRegister = $("#lastNameRegister").val();
     var emailSignIn = $("#emailSignIn").val();
@@ -257,17 +264,20 @@ function signIn() {
 
     $.post("/api/players", user)
         .done(function () {
+            console.log("NEW USER REGISTERD. CONGRATS");
             $.post("/api/login", user);
             $("#logout-form").show();
             $("#createNewGame").show();
             $("#login-form").hide();
             $("#signIn-form").hide();
+            location.assign("/web/games.html");
         });
 }
 
 function createGame() {
     $.post("/api/games").done(function (data) {
         console.log("created game");
+        console.log(data);
         location.assign("/web/game.html?gp=" + data.gpid);
     });
 }

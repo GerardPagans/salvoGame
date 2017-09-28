@@ -3,44 +3,112 @@
 
 <head>
     <link rel="stylesheet" type="text/css" href="style/salvo_style.css">
+      
+
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 
 <body>
-    <h2 id="whoVersusWho"></h2>
-
-
-    <div class="tables">
-        <table id="hitsAndMyShips">
-        </table>
-        <table id="shotsIFired">
-        </table>
+    <div id="waitForMyTurn">
+    WAITING FOR A PLAYER
     </div>
-    <div class="checkBotton">
-        <input type="checkbox" id="placeVertical"> Place vertical
-    </div>
+    <div id="whoVersusWho"></div>
+
     <div class="tableShips">
         <div>
             <img data-number-cells="5" class="boat" src="img/aircraftcarrier.png">
+            <tr>
+                <td data-number-cells="5" class="boat">
+                </td>
+                <td data-number-cells="5" class="boat">
+                </td>
+                <td data-number-cells="5" class="boat">
+                </td>
+                <td data-number-cells="5" class="boat">
+                </td>
+                <td data-number-cells="5" class="boat">
+                </td>
+            </tr>
         </div>
         <div>
             <img data-number-cells="4" class="boat" src="img/battleShip.png">
+            <tr>
+                <td data-number-cells="4" class="boat">
+                </td>
+                <td data-number-cells="4" class="boat">
+                </td>
+                <td data-number-cells="4" class="boat">
+                </td>
+                <td data-number-cells="4" class="boat">
+                </td>
+            </tr>
         </div>
         <div>
             <img data-number-cells="4" class="boat" src="img/submarine.png">
+            <tr>
+                <td data-number-cells="3" class="boat">
+                </td>
+                <td data-number-cells="3" class="boat">
+                </td>
+                <td data-number-cells="3" class="boat">
+                </td>
+                <td data-number-cells="3" class="boat">
+                </td>
+            </tr>
         </div>
         <div>
             <img data-number-cells="3" class="boat" src="img/destroyer.png">
+            <tr>
+                <td data-number-cells="3" class="boat">
+                </td>
+                <td data-number-cells="3" class="boat">
+                </td>
+                <td data-number-cells="3" class="boat">
+                </td>
+                <td data-number-cells="3" class="boat">
+                </td>
+            </tr>
         </div>
         <div>
             <img data-number-cells="2" class="boat" src="img/patrolBoat.png">
+            <tr>
+                <td data-number-cells="3" class="boat">
+                </td>
+                <td data-number-cells="3" class="boat">
+                </td>
+            </tr>
         </div>
+        <form class="placeVertical">
+            <label><input class="checkBotton" type="checkbox" id="placeVertical"> Place vertical</label>
+        </form>
     </div>
 
-    <button id="placeShips">Place ships</button>
-    <button id="sendSalvos">Send salvos</button>
+
+    <div class="informationBoatsAndTables">
+        <div id="myBoatsInfo"></div>
+
+        <div class="tables">
+
+            <table id="hitsAndMyShips">
+            </table>
+            <table id="shotsIFired">
+            </table>
+        </div>
+
+        
+        <div id="OpponentBoatsInfo"></div>
+    </div>
+    <div id="centredButtons">
+        <button id="placeShips" >Place ships</button>
+        <button id="sendSalvos">Send salvos</button>
+        <button id="BackToMenu">Back to menu page</button>
+    </div>
+    <div class="hidden" id="gameOver">
+        <img src="img/gameOver.jpg">
+    </div>
+    
 
     <script src="game.js" type="text/javascript"></script>
 </body>

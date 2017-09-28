@@ -44,7 +44,7 @@ public class SalvoApplication {
 									  ScoreRepository scoreRepository) {
 		return (args) -> {
 			// save some customers
-			Player p1 = new Player("Jack", "Bauer", "1@1", "password1");
+			Player p1 = new Player("Jack", "Bauer", "1@1", "1");
 			Player p2 = new Player("Kim", "Bauer", "kimie@example.com", "password2");
 			Player p3 = new Player("David", "Palmer", "dave@example.com", "password3");
 			Player p4 = new Player("Michelle", "Dessler", "michelle@example.com", "password4");
@@ -98,15 +98,18 @@ public class SalvoApplication {
 			shipRepository.save(ship4);
 			shipRepository.save(ship5);
 
-			Salvo salvo1 = new Salvo(gameOnePlayerOne, 1, new ArrayList<>(Arrays.asList("B4", "B5", "B6")));
+			Salvo salvo1 = new Salvo(gameOnePlayerOne, 1, new ArrayList<>(Arrays.asList("J7", "J8", "B6")));
 			Salvo salvo2 = new Salvo(gameOnePlayerOne, 2, new ArrayList<>(Arrays.asList("E1", "H3", "A2")));
-			Salvo salvo3 = new Salvo(gameOnePlayerTwo, 1, new ArrayList<>(Arrays.asList("C3", "C4", "C7")));
-			Salvo salvo4 = new Salvo(gameOnePlayerTwo, 2, new ArrayList<>(Arrays.asList("A2", "B2", "C2")));
+			Salvo salvo3 = new Salvo(gameOnePlayerTwo, 1, new ArrayList<>(Arrays.asList("D3", "D4", "C7")));
+			Salvo salvo4 = new Salvo(gameOnePlayerTwo, 2, new ArrayList<>(Arrays.asList("G2", "G3", "G4")));
+			Salvo salvo5 = new Salvo(gameOnePlayerTwo, 3, new ArrayList<>(Arrays.asList("C2", "C3", "C4")));
+
 
 			salvoRepository.save(salvo1);
 			salvoRepository.save(salvo2);
 			salvoRepository.save(salvo3);
 			salvoRepository.save(salvo4);
+			salvoRepository.save(salvo5);
 
 			Score score1 = new Score(myFirstGame, p1, 1.0 );
 			Score score2 = new Score(myFirstGame, p2, 0.0);

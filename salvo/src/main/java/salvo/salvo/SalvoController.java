@@ -340,13 +340,11 @@ public class SalvoController {
 
     private GamePlayer  getEnemyPlayer(GamePlayer gamePlayer) {
 
-        Long playerId = gamePlayer.getId();
+        Long gamePlayerId = gamePlayer.getId();
         Set<GamePlayer> gamePlayers = gamePlayer.getGame().getGamePlayers();
 
         GamePlayer enemyGamePlayer = gamePlayers.stream()
-
-                .filter(gp -> gp.getId() != playerId).findAny().orElse(null);
-
+                .filter(gp -> gp.getId() != gamePlayerId).findAny().orElse(null);
         return enemyGamePlayer;
     }
 
@@ -363,10 +361,10 @@ public class SalvoController {
         List<String> locationSalvo = salvo.getLocation();
         List<String> shipsLocationsEnemy = getShipsLocations(getEnemyPlayer(salvo.getGamePlayer()));
 
-        List<String> hits = locationSalvo.stream()
+        List<String> hits = locationSalvo
+                .stream()
                 .filter(cell -> shipsLocationsEnemy.contains(cell))
                 .collect(Collectors.toList());
-
     return hits;
     }
 
